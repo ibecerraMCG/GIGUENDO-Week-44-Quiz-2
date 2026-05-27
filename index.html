@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 44 Practice Quiz 2</title>
+
+    <style>
+        /* --- CSS Variables & Themes --- */
+        :root {
+            --transition-speed: 0.3s;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Default Feedback Colors (Fallback for custom themes) */
+            --feedback-success-bg: #064e3b;
+            --feedback-success-border: #059669;
+            --feedback-success-text: #a7f3d0;
+            --feedback-error-bg: #7f1d1d;
+            --feedback-error-border: #dc2626;
+            --feedback-error-text: #fecaca;
+        }[data-theme="dark"] {
+            --bg-body: #1e293b; --bg-card: #334155; --bg-header: #0f172a;
+            --text-main: #f1f5f9; --text-muted: #94a3b8; --text-accent: #38bdf8;
+            --border-color: #475569; --highlight-bg: #475569;
+            --button-bg: #38bdf8; --button-text: #0f172a; --button-hover: #0ea5e9;
+        }[data-theme="light"] {
+            --bg-body: #f3f4f6; --bg-card: #ffffff; --bg-header: #ffffff;
+            --text-main: #1f2937; --text-muted: #6b7280; --text-accent: #2563eb;
+            --border-color: #e5e7eb; --highlight-bg: #f3f4f6;
+            --button-bg: #2563eb; --button-text: #ffffff; --button-hover: #1d4ed8;
+            --feedback-success-bg: #ecfdf5; --feedback-success-border: #34d399; --feedback-success-text: #065f46;
+            --feedback-error-bg: #fef2f2; --feedback-error-border: #f87171; --feedback-error-text: #991b1b;
+        }[data-theme="midnight"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #e0e0e0; --text-muted: #888888; --text-accent: #90caf9;
+            --border-color: #333333; --highlight-bg: #1a1a1a;
+            --button-bg: #90caf9; --button-text: #000000; --button-hover: #42a5f5;
+            --feedback-success-bg: #051b11; --feedback-success-border: #0f5132; --feedback-success-text: #75b798;
+            --feedback-error-bg: #2c0b0e; --feedback-error-border: #842029; --feedback-error-text: #ea868f;
+        }[data-theme="legacy-dark"] {
+            --bg-body: #2d343e; --bg-card: #3c424f; --bg-header: #3c424f;
+            --text-main: #e8e6e3; --text-muted: #b0c4de; --text-accent: #8ab4f8;
+            --border-color: #555; --highlight-bg: #454c5a;
+            --button-bg: #8ab4f8; --button-text: #202124; --button-hover: #a3c5f9;
+            --feedback-success-bg: #344e41; --feedback-success-border: #52b788; --feedback-success-text: #c7f9cc;
+            --feedback-error-bg: #5e2129; --feedback-error-border: #a4133c; --feedback-error-text: #f8d7da;
+        }[data-theme="sepia"] {
+            --bg-body: #f4ecd8; --bg-card: #fdf6e3; --bg-header: #e4d5b7;
+            --text-main: #433422; --text-muted: #7c6f5a; --text-accent: #a05a2c;
+            --border-color: #d3c4a5; --highlight-bg: #ebe1c9;
+            --button-bg: #a05a2c; --button-text: #fdf6e3; --button-hover: #864822;
+            --feedback-success-bg: #e6f4ea; --feedback-success-border: #8ab893; --feedback-success-text: #2e4c35;
+            --feedback-error-bg: #f9e3e3; --feedback-error-border: #d48f8f; --feedback-error-text: #5c2b2b;
+        }
+
+        [data-theme="contrast"] {
+            --bg-body: #000000; --bg-card: #000000; --bg-header: #000000;
+            --text-main: #ffffff; --text-muted: #dddddd; --text-accent: #ffff00;
+            --border-color: #ffffff; --highlight-bg: #333333;
+            --button-bg: #ffff00; --button-text: #000000; --button-hover: #e6e600;
+            --feedback-success-bg: #000000; --feedback-success-border: #00ff00; --feedback-success-text: #00ff00;
+            --feedback-error-bg: #000000; --feedback-error-border: #ff0000; --feedback-error-text: #ff0000;
+        }
+
+        /* --- Global Reset & Layout --- */
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-main);
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            line-height: 1.6;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        header.unpinned { position: relative; box-shadow: none; }
+
+        .header-top {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; flex-wrap: wrap; gap: 15px;
+        }
+
+        header h1 { font-size: 1.5rem; margin: 0; color: var(--text-accent); font-weight: 700; }
+
+        .controls-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+        /* --- Custom Theme Builder --- */
+        .custom-builder {
+            display: none; flex-wrap: wrap; gap: 15px;
+            background-color: var(--bg-card); padding: 10px 15px;
+            border-radius: 8px; border: 1px solid var(--border-color);
+            margin-top: 5px; font-size: 0.85rem; animation: fadeIn 0.3s;
+            width: 100%; justify-content: flex-end;
+        }
+        .custom-builder.active { display: flex; }
+        .color-picker-group { display: flex; align-items: center; gap: 8px; }
+        .color-picker-group input[type="color"] {
+            border: none; width: 25px; height: 25px; border-radius: 4px;
+            cursor: pointer; padding: 0; background: none;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Controls --- */
+        .header-btn {
+            background-color: var(--highlight-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header-btn:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
+        .pin-btn {
+            background: none; border: 1px solid var(--border-color); color: var(--text-main);
+            cursor: pointer; padding: 0 10px; border-radius: 6px; font-size: 1rem;
+            transition: background-color 0.2s; height: 34px; display: flex;
+            align-items: center; justify-content: center;
+        }
+        .pin-btn:hover { background-color: var(--highlight-bg); }
+        .pin-btn.pin-active { background-color: rgba(0, 0, 0, 0.1); }
+
+        select#theme-select {
+            padding: 0 12px; border-radius: 6px; border: 1px solid var(--border-color);
+            background-color: var(--bg-card); color: var(--text-main);
+            cursor: pointer; font-family: inherit; height: 34px;
+        }
+
+        /* --- Section Navigation --- */
+        .section-nav { display: flex; gap: 10px; flex-wrap: wrap; }
+        .section-nav button {
+            background-color: var(--highlight-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); padding: 6px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 0.85rem;
+            font-weight: 500; transition: all 0.2s;
+        }
+        .section-nav button:hover { border-color: var(--text-accent); color: var(--text-accent); }
+
+        /* --- Main Content --- */
+        .container {
+            max-width: 850px;
+            margin: 2rem auto;
+            padding: 0 1rem 4rem 1rem;
+        }
+
+        .section-header {
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--text-accent);
+            color: var(--text-accent);
+            font-size: 1.5rem;
+            font-weight: 700;
+            scroll-margin-top: 150px; /* Offset for sticky header */
+        }
+
+        /* --- Question Card --- */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .lo-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid var(--text-accent);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+            display: none; /* Hidden by default */
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Options --- */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--highlight-bg);
+            border-color: var(--text-muted);
+        }
+
+        .option-label input {
+            margin-top: 0.3rem;
+            margin-right: 1rem;
+            accent-color: var(--text-accent);
+            transform: scale(1.2);
+        }
+
+        /* --- Buttons --- */
+        .btn-check {
+            margin-top: 1.5rem;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-check:hover {
+            opacity: 0.9;
+        }
+
+        .btn-link {
+            display: inline-block;
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-link:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Feedback Area --- */
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+            border: 1px solid transparent;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background-color: var(--feedback-success-bg);
+            border-color: var(--feedback-success-border);
+            color: var(--feedback-success-text);
+        }
+
+        .feedback.incorrect {
+            background-color: var(--feedback-error-bg);
+            border-color: var(--feedback-error-border);
+            color: var(--feedback-error-text);
+        }
+
+        .feedback-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .rationale {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .source {
+            display: block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            font-style: italic;
+            border-top: 1px dashed currentColor;
+            padding-top: 0.5rem;
+        }
+
+        /* --- Mobile Tweaks --- */
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; align-items: flex-start; }
+            .controls-wrapper { width: 100%; justify-content: flex-start; }
+            .section-nav { justify-content: flex-start; }
+            .custom-builder { justify-content: flex-start; }
+            header h1 { font-size: 1.25rem; }
+            #reveal-all-container { justify-content: flex-start !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="header-top">
+            <h1>Week 44 Practice Quiz 2</h1>
+            <div class="controls-wrapper">
+                
+                <!-- Reveal LOs Button -->
+                <button id="reveal-all-btn" class="header-btn" onclick="toggleAllLOs()">Show Learning Objectives</button>
+                
+                <!-- Pin Button -->
+                <button class="pin-btn pin-active" id="pin-btn" onclick="toggleHeader()" title="Pin/Unpin Header">📌</button>
+                
+                <!-- Theme Selector -->
+                <div class="theme-control">
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="dark">Modern Dark</option>
+                        <option value="midnight">Midnight</option>
+                        <option value="light">Modern Light</option>
+                        <option value="legacy-dark">Legacy Dark</option>
+                        <option value="sepia">Sepia</option>
+                        <option value="contrast">High Contrast</option>
+                        <option value="custom">⚙️ Custom...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Custom Theme Color Pickers -->
+            <div class="custom-builder" id="custom-builder">
+                <div class="color-picker-group">
+                    <label>Background:</label>
+                    <input type="color" id="color-bg" value="#1a1a2e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Cards:</label>
+                    <input type="color" id="color-card" value="#16213e" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Text:</label>
+                    <input type="color" id="color-text" value="#e94560" oninput="updateCustomTheme()">
+                </div>
+                <div class="color-picker-group">
+                    <label>Accent:</label>
+                    <input type="color" id="color-accent" value="#0f3460" oninput="updateCustomTheme()">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dynamic Navigation Bar -->
+        <div class="section-nav" id="section-nav"></div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-root">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
+    <script>
+        // --- Data ---
+        const quizData = [
+            // --- Section 1: Uterine Drugs & Drugs in Pregnancy ---
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO1: Recognize the pharmacological mechanism of oxytocin",
+                question: "A 28-year-old woman at 40 weeks gestation is admitted to the labor and delivery unit for the induction of labor. She is started on a continuous intravenous infusion of oxytocin. At the cellular level in the myometrium, this medication exerts its uterotonic effects by binding to a specific G protein-coupled receptor. Which of the following best describes the downstream intracellular signaling pathway directly activated by this receptor?",
+                options: {
+                    A: "Activation of adenylyl cyclase and increased cAMP",
+                    B: "Activation of the PLC-IP3 pathway via Gq and G11",
+                    C: "Inhibition of adenylyl cyclase via Gi",
+                    D: "Opening of ligand-gated sodium channels",
+                    E: "Stimulation of soluble guanylyl cyclase and increased cGMP"
+                },
+                correctAnswer: "B",
+                rationale: "Oxytocin binds to specific G protein-coupled receptors on the myometrium that are coupled to Gq and G11. This directly activates the PLC-IP3 pathway, which ultimately leads to an increase in intracellular calcium and stimulates uterine contraction.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 7: 'Oxytocin - Mechanism of Action • Acts via specific G protein-coupled receptors • Coupled to Gq and G11, activating the PLC-IP3 pathway'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO1: Recognize the pharmacological mechanism of oxytocin",
+                question: "A 30-year-old woman receives an oxytocin infusion to augment her prolonged labor. Alongside the activation of the PLC-IP3 pathway, oxytocin further promotes robust myometrial contractions by enhancing the influx of a specific ion from the extracellular fluid. Which of the following channels is enhanced by oxytocin to facilitate this process?",
+                options: {
+                    A: "Ligand-gated chloride channels",
+                    B: "Ligand-gated sodium channels",
+                    C: "Voltage-sensitive calcium channels",
+                    D: "Voltage-sensitive potassium channels",
+                    E: "Voltage-sensitive sodium channels"
+                },
+                correctAnswer: "C",
+                rationale: "In addition to activating the PLC-IP3 pathway, oxytocin enhances voltage-sensitive calcium (Ca2+) channels. This influx of calcium is critical for the robust contraction of uterine smooth muscle.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 7: 'Oxytocin - Mechanism of Action... Enhances the voltage-sensitive Ca2+ channels'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO2: List the therapeutic applications of oxytocin",
+                question: "A 35-year-old woman with preeclampsia at 38 weeks gestation requires prompt delivery of her fetus. Her cervix is favorable, but she is not experiencing spontaneous contractions. Which of the following is the pharmacological agent of choice to initiate uterine contractions in this patient?",
+                options: {
+                    A: "Ergonovine",
+                    B: "Indomethacin",
+                    C: "Magnesium sulfate",
+                    D: "Oxytocin",
+                    E: "Terbutaline"
+                },
+                correctAnswer: "D",
+                rationale: "Oxytocin (Pitocin) is the standard drug of choice for the induction of labor in patients who require delivery but are not in spontaneous labor.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 8: 'Clinical Use of Oxytocin • Induction of labor • Oxytocin (Pitocin) is the drug of choice to induce labor'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO2: List the therapeutic applications of oxytocin",
+                question: "A 26-year-old woman successfully delivers a healthy infant vaginally. However, twenty minutes after the delivery of the placenta, she begins to experience heavy vaginal bleeding. Palpation of the abdomen reveals a soft, \"boggy\" uterus. An intravenous infusion of oxytocin is immediately started. The primary therapeutic goal of administering oxytocin during this specific stage of parturition is to:",
+                options: {
+                    A: "Decrease systemic vascular resistance",
+                    B: "Induce milk synthesis in the mammary glands",
+                    C: "Maintain uterine contractions and tone",
+                    D: "Promote targeted relaxation of the cervix",
+                    E: "Suppress endogenous prostaglandin release"
+                },
+                correctAnswer: "C",
+                rationale: "During the third stage of labor and the puerperium, oxytocin is therapeutically utilized to maintain uterine contractions and tone, which physically compresses the bleeding uterine vessels and controls post-partum hemorrhage.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 9: 'Clinical Use of Oxytocin... Third stage of labor and puerperium • Oxytocin maintains uterine contractions and tone'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO3: Describe the effects of ergot alkaloids on uterine motility",
+                question: "A 32-year-old woman experiences severe post-partum hemorrhage due to uterine atony that is unresponsive to oxytocin. The physician administers an intramuscular injection of methylergonovine (Methergine). Which of the following best describes the physiological effect of this medication on the patient's uterus?",
+                options: {
+                    A: "Complete relaxation of the myometrium",
+                    B: "Dose-dependent forceful and prolonged contractions",
+                    C: "Down-regulation of myometrial oxytocin receptors",
+                    D: "Rapid, uncoordinated fibrillation of smooth muscle",
+                    E: "Selective relaxation of the lower uterine segment"
+                },
+                correctAnswer: "B",
+                rationale: "Ergot alkaloids, such as ergonovine and methylergonovine, increase the motor activity of the uterus. They produce dose-dependent contractions that are more forceful and prolonged, making them highly effective for controlling post-partum bleeding.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 13: 'Ergot Alkaloids • Alkaloids increase motor activity of the uterus • Uterine contractions are dependent on the dose of the alkaloid • Dose-dependent contractions are more forceful and prolonged'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO3: Describe the effects of ergot alkaloids on uterine motility",
+                question: "A 29-year-old woman is given an ergot alkaloid preparation to control uterine bleeding following a cesarean section. Shortly after administration, she complains of severe nausea, vomiting, and new-onset chest pain. The chest pain is a recognized adverse effect of this class of drugs and is most directly caused by which of the following mechanisms?",
+                options: {
+                    A: "Coronary vasospasm",
+                    B: "Endocardial fibrosis",
+                    C: "Myocardial infarction due to plaque rupture",
+                    D: "Pericardial effusion",
+                    E: "Pulmonary hypertension"
+                },
+                correctAnswer: "A",
+                rationale: "Ergot alkaloids have potent vasoconstrictive properties. Toxicity includes stimulation of emetic centers (nausea/vomiting) and significant side effects such as coronary vasospasm, muscle pain, and tingling of extremities.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 15: 'Ergot Alkaloids • Toxicity – stimulate emetic centers (nausea and vomiting) • Side effects - coronary vasospasm, muscle pain and weakness, tingling of extremities'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO4: Understand the classifications of uterine agents to inhibit motility",
+                question: "A 24-year-old woman at 28 weeks gestation presents with regular uterine contractions and cervical dilation. She is admitted for premature labor. The obstetrician prescribes terbutaline to arrest her contractions. Which of the following best describes the pharmacological classification of this tocolytic agent?",
+                options: {
+                    A: "Beta-2 adrenergic receptor agonist",
+                    B: "Calcium channel blocker",
+                    C: "Oxytocin receptor antagonist",
+                    D: "Prostaglandin synthetase inhibitor",
+                    E: "Selective serotonin reuptake inhibitor"
+                },
+                correctAnswer: "A",
+                rationale: "Terbutaline (and salbutamol) are classified as Beta-2 agonists. They are prescribed as tocolytic agents to counteract labor contractions and delay premature labor, though they carry FDA warnings regarding cardiovascular and metabolic side effects.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 19: 'Clinical Use of Drugs to Inhibit Uterine Motility • Beta2 agonists • Preferred for the treatment of premature labor • Salbutamol (Ventolin) or terbutaline can be given orally or IV'"
+            },
+            {
+                section: "Uterine Drugs & Drugs in Pregnancy",
+                fullLO: "LO4: Understand the classifications of uterine agents to inhibit motility",
+                question: "A 34-year-old woman at 30 weeks gestation is admitted to the hospital with severe preeclampsia and begins actively seizing (eclampsia). Intravenous magnesium sulfate is administered. In addition to controlling the eclamptic seizures, high doses of this medication will directly exert which of the following effects on the patient's reproductive tract?",
+                options: {
+                    A: "Accelerate cervical ripening",
+                    B: "Augment endogenous oxytocin release",
+                    C: "Induce profound uterine contractions",
+                    D: "Inhibit uterine motility",
+                    E: "Stimulate endometrial shedding"
+                },
+                correctAnswer: "D",
+                rationale: "Magnesium sulfate is utilized to control eclamptic seizures but also functions as a tocolytic agent by inhibiting uterine motility. It is used as an alternative to Beta-2 agonists for this purpose.",
+                source: "Uterine Drugs and Drugs in Pregnancy PDF, Slide 20: 'Clinical Use of Drugs to Inhibit Uterine Motility • Magnesium sulfate • Given to control eclamptic seizures and inhibit uterine motility'"
+            },
+
+            // --- Section 2: Contraceptives and Lactation ---
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO1a: Name and describe the stages of postpartum lactation: Anatomical changes in the mammary glands",
+                question: "A 28-year-old woman is currently in her second trimester (midpregnancy) of her first pregnancy. As her mammary glands undergo mammogenesis, which of the following anatomical changes is actively occurring at this specific stage?",
+                options: {
+                    A: "Alveoli dilate and secrete mature milk",
+                    B: "Alveoli enlarge and acquire a central lumen",
+                    C: "The glands completely regress to a resting state",
+                    D: "The system consists solely of ducts with very few alveoli",
+                    E: "Vascular spiders form prominently over the areola"
+                },
+                correctAnswer: "B",
+                rationale: "During mammogenesis, the mammary glands undergo specific sequential anatomical changes. Prior to pregnancy, there are only ducts with few alveoli. In early pregnancy, alveoli grow. In midpregnancy, the alveoli enlarge and acquire a lumen. During lactation, they dilate.",
+                source: "Lactation and Contraception PDF, Slide 4: 'Changes in the mammary glands during pregnancy... 3) In midpregnancy, alveoli enlarge and acquire lumen'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO1b: Name and describe the stages of postpartum lactation: Hormonal changes driving anatomical changes",
+                question: "A 24-year-old woman at 32 weeks gestation undergoes a routine prenatal evaluation. Her breasts have enlarged significantly due to active mammogenesis. The intense growth of her alveolar cells during this specific stage of pregnancy is primarily driven by elevated levels of which of the following hormone combinations?",
+                options: {
+                    A: "Dopamine and Thyroid Stimulating Hormone",
+                    B: "Human Chorionic Gonadotropin and Relaxin",
+                    C: "Luteinizing Hormone and Follicle Stimulating Hormone",
+                    D: "Oxytocin and Prolactin",
+                    E: "Progesterone and Estrogen"
+                },
+                correctAnswer: "E",
+                rationale: "Stage 1 of lactation is Mammogenesis (mid- to late pregnancy). During this stage, high levels of progesterone and estrogen drive the robust growth of the alveolar cells while simultaneously inhibiting active lactation.",
+                source: "Lactation and Contraception PDF, Slide 5: 'Stages of lactation Stage 1: Mammogenesis (mid- to late pregnancy): Progesterone and estrogen drive growth of alveolar cells while inhibiting lactation.'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO1c: Name and describe the stages of postpartum lactation: Contraindications for breastfeeding",
+                question: "A newborn infant undergoes routine metabolic screening shortly after birth. The results indicate a deficiency in the enzymes required for the metabolism of galactose (familial galactosemia). The pediatrician counsels the mother regarding infant feeding. Which of the following is the most appropriate recommendation?",
+                options: {
+                    A: "The mother should breastfeed exclusively for the first 6 months.",
+                    B: "The mother should breastfeed but supplement with a lactase enzyme.",
+                    C: "Breastfeeding is absolutely contraindicated.",
+                    D: "Breastfeeding can continue if the mother avoids dairy in her own diet.",
+                    E: "Breastfeeding is contraindicated only if the mother develops mastitis."
+                },
+                correctAnswer: "C",
+                rationale: "Familial galactosemia in the newborn is an absolute contraindication to breastfeeding. Human breast milk contains high amounts of lactose (which breaks down into glucose and galactose). Because the infant cannot metabolize galactose, lactose consumption can lead to liver failure and severe morbidity.",
+                source: "Lactation and Contraception PDF, Slide 15: 'Contraindications: When breast is not best Galactosemia in the newborn - Familial galactosemia is characterized by autosomal recessive deficiencies in enzymes required for metabolism of galactose... Lactose consumption can lead to liver failure'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO2a: Describe the cellular mechanisms for postpartum lactation: Hormonal changes and sensory stimuli that initiate and sustain postpartum lactation",
+                question: "A 26-year-old woman is actively breastfeeding her 1-month-old infant. During nursing, the mechanical stimulation of the nipple mechanoreceptors sends afferent signals to the hypothalamus. This sensory input is essential for maintaining milk production (lactogenesis) because it directly stimulates the anterior pituitary to release which of the following hormones?",
+                options: {
+                    A: "Dopamine",
+                    B: "Estrogen",
+                    C: "Oxytocin",
+                    D: "Progesterone",
+                    E: "Prolactin"
+                },
+                correctAnswer: "E",
+                rationale: "Nipple mechanoreceptor stimulation during suckling sends signals to the brain that trigger the anterior pituitary to release prolactin, which sustains lactogenesis (milk production). It simultaneously triggers the posterior pituitary to release oxytocin for galactokinesis (milk ejection).",
+                source: "Lactation and Contraception PDF, Slide 7: 'Suckling maintains lactogenesis by increasing prolactin... Nipple Mechanoreceptor Stimulation -> Anterior Pituitary Prolactin Release -> Lactogenesis (Milk Production)'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO2b: Describe the cellular mechanisms for postpartum lactation: Hormones that interfere with postpartum lactation",
+                question: "Following a complicated vaginal delivery, a 30-year-old woman retains a small fragment of placental tissue within her uterus. Over the next three days, she is unable to produce breast milk (Stage 2 lactogenesis fails to occur). The retained placental tissue prevents the necessary physiological drop of which of the following hormones, thereby severely interfering with the initiation of milk secretion?",
+                options: {
+                    A: "Human Chorionic Gonadotropin (hCG)",
+                    B: "Luteinizing Hormone (LH)",
+                    C: "Oxytocin",
+                    D: "Progesterone",
+                    E: "Prolactin"
+                },
+                correctAnswer: "D",
+                rationale: "Stage 2 (Lactogenesis) occurs postnatally because the delivery of the placenta causes a massive, rapid reduction in progesterone and estrogen. These high levels of progesterone during pregnancy inhibit milk secretion. If placental tissue is retained, progesterone remains elevated, interfering with lactogenesis.",
+                source: "Lactation and Contraception PDF, Slide 6: 'Stages of lactation Stage 2: Lactogenesis (postnatal): Reductions in progesterone and estrogen permit milk secretion. Prolactin and oxytocin drive milk production.'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO3a: Galactorrhea as a symptom of endocrine pathology in males and females: Pituitary neoplasias",
+                question: "A 35-year-old man presents to the clinic with complaints of bilateral nipple discharge (galactorrhea), decreased libido, and frequent headaches. Laboratory testing reveals a markedly elevated serum prolactin level and a normal TSH. An MRI of the brain is ordered. Which of the following findings on the MRI is the most likely cause of this patient's galactorrhea?",
+                options: {
+                    A: "Agenesis of the corpus callosum",
+                    B: "Atrophy of the posterior pituitary",
+                    C: "Enlargement of the pineal gland",
+                    D: "Pituitary stalk lesion or prolactinoma",
+                    E: "Thrombosis of the middle cerebral artery"
+                },
+                correctAnswer: "D",
+                rationale: "In a male patient with galactorrhea, normal TSH, and highly elevated prolactin, the origin is typically pituitary. Common anatomical causes in this region include pituitary tumors (prolactinomas) or pituitary stalk lesions (which prevent inhibitory dopamine from reaching the anterior pituitary).",
+                source: "Lactation and Contraception PDF, Slide 20: 'Galactorrhea... Origin: Pituitary | Cause: Tumors or benign neoplasias, Pituitary lesion or surgical resection'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO3b: Galactorrhea as a symptom of endocrine pathology in males and females: Medication-associated galactorrhea",
+                question: "A 28-year-old woman with a history of schizophrenia presents with new-onset bilateral galactorrhea. Her menstrual cycles have also become irregular. She recently started a new antipsychotic medication. The development of galactorrhea in this patient is most likely mediated by the medication's blockade of which of the following neurotransmitters in the hypothalamus?",
+                options: {
+                    A: "Acetylcholine",
+                    B: "Dopamine",
+                    C: "Epinephrine",
+                    D: "Glutamate",
+                    E: "Serotonin"
+                },
+                correctAnswer: "B",
+                rationale: "Prolactin secretion from the anterior pituitary is tonically inhibited by dopamine from the hypothalamus. Antipsychotics block dopamine receptors, lifting this inhibition and leading to hyperprolactinemia and galactorrhea.",
+                source: "Lactation and Contraception PDF, Slide 20: 'Galactorrhea... [Diagram shows Dopamine inhibiting Prolactin, with ANTIPSYCHOTICS blocking Dopamine]'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO4a: Describe at least four different methods of contraception: Efficacy",
+                question: "A 19-year-old woman visits her gynecologist seeking a highly effective, reversible method of contraception. She admits that she is very forgetful and struggles to take a daily pill. She wishes to avoid any method that requires daily, weekly, or monthly maintenance. Which of the following contraceptive options offers the highest typical-use efficacy (failure rate <1%) for this patient?",
+                options: {
+                    A: "Copper intrauterine device",
+                    B: "Diaphragm with spermicide",
+                    C: "Hormonal contraceptive patch",
+                    D: "Male condoms",
+                    E: "Subdermal progestin implant"
+                },
+                correctAnswer: "E",
+                rationale: "The subdermal progestin implant is a highly effective, reversible method of contraception with a typical use failure rate of <1%. (The Copper IUD is also highly effective at 0.8%, but the implant is explicitly listed as <1%). The pill, patch, and ring have typical use failure rates around 9%, and condoms are 18-21%.",
+                source: "Lactation and Contraception PDF, Slide 25: 'Reversible methods of contraception... Implants • Subdermal implant releases progestin for 3yr • Typical use failure rate: <1%'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO4b: Describe at least four different methods of contraception: Mechanisms of action",
+                question: "A 22-year-old woman is prescribed a combined hormonal contraceptive pill containing both synthetic estrogen and progestin. She takes the pill consistently every day. Which of the following best describes the primary neuroendocrine mechanism by which this medication prevents pregnancy?",
+                options: {
+                    A: "Continuous exposure suppresses the mid-cycle LH surge",
+                    B: "It causes premature shedding of the endometrial lining",
+                    C: "It mechanically blocks sperm from entering the fallopian tubes",
+                    D: "It selectively destroys developing ovarian follicles",
+                    E: "It significantly increases the frequency of GnRH pulses"
+                },
+                correctAnswer: "A",
+                rationale: "Combined hormonal contraceptives work primarily by providing continuous exposure to synthetic estrogen and/or progesterone, which exerts negative feedback on the pituitary to suppress the mid-cycle LH surge. This keeps eggs from leaving the ovaries (prevents ovulation).",
+                source: "Lactation and Contraception PDF, Slide 28: 'Mechanisms for hormonal contraception • Continuous exposure to synthetic estrogen and/or progesterone suppresses LH surge... Prevention of the mid-cycle surge keeps eggs from leaving the ovaries'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO5a: Contraindications for different forms of contraception: Cardiovascular contraindications",
+                question: "A 36-year-old woman requests a prescription for combined oral contraceptive pills (estrogen and progestin). During her history, she mentions that she smokes one pack of cigarettes per day and has a BMI of 34 kg/m2 . The physician refuses to prescribe a combined oral contraceptive and recommends a progestin-only pill instead. The physician's decision is based on the patient's significantly elevated risk for which of the following cardiovascular complications?",
+                options: {
+                    A: "Atrial fibrillation",
+                    B: "Dilated cardiomyopathy",
+                    C: "Endocarditis",
+                    D: "Pericardial effusion",
+                    E: "Venous thrombosis"
+                },
+                correctAnswer: "E",
+                rationale: "Hormonal contraceptives containing estrogen increase the risk of venous thrombosis. Factors that strongly elevate this risk include obesity, smoking, and thrombophilias. In these high-risk patients, progestin-only pills are the appropriate alternative.",
+                source: "Lactation and Contraception PDF, Slide 31: 'Contraindications and alternatives for estrogen-progestin contraceptives • Venous thrombosis... Factors associated with elevated risk: – Obesity, smoking, thrombophilias. Progestin only pills are an appropriate alternative'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO5b: Contraindications for different forms of contraception: Uterine anomalies and implantable contraceptives",
+                question: "A 28-year-old woman is interested in obtaining a levonorgestrel intrauterine system (IUD). Upon reviewing her chart, the physician notes that she has a previously diagnosed bicornuate uterus. The physician counsels her that this specific anatomical anomaly represents a contraindication for an IUD primarily due to an increased likelihood of which of the following?",
+                options: {
+                    A: "Deep vein thrombosis",
+                    B: "Difficulty with IUD retention and increased bleeding",
+                    C: "Ectopic pregnancy",
+                    D: "Immediate anaphylactic reaction to copper",
+                    E: "Polycystic ovarian syndrome"
+                },
+                correctAnswer: "B",
+                rationale: "Uterine anomalies (like a bicornuate uterus, uterine septum, uterus didelphys) are found in 6-8% of women and are contraindications for IUDs because they cause difficulties with IUD retention and an increased likelihood of bleeding.",
+                source: "Lactation and Contraception PDF, Slide 32: 'Contraindications for IUDs • 6-8% of women exhibit uterine anomalies – Difficulties in IUD retention – Increased likelihood of bleeding... [Diagrams show Bicornuate uterus, Uterine septum, etc.]'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO6: Distinguish between endocrine responses to hormonal contraceptives versus hormonal characteristics of reproductive senescence.",
+                question: "A clinical study measures the daily serum estradiol concentrations of a 25-year-old woman taking combined hormonal contraceptives and compares them to a 60-year-old post-menopausal woman. Which of the following best describes the expected endogenous 17-beta-estradiol levels in the post-menopausal woman compared to the woman on hormonal contraception?",
+                options: {
+                    A: "High and highly variable (200-400 pg/mL)",
+                    B: "Low and stable (10-30 pg/mL)",
+                    C: "Low and highly variable (20-80 pg/mL)",
+                    D: "Non-detectable on standard panels",
+                    E: "Identical between both patients"
+                },
+                correctAnswer: "B",
+                rationale: "In a post-menopausal state (reproductive senescence), endogenous estradiol levels are low and stable (10-30 pg/mL). In contrast, women on hormonal contraception experience low but variable endogenous estradiol levels (20-80 pg/mL) as the synthetic hormones suppress the normal high-amplitude fluctuations seen in a normal menstrual cycle (30-400 pg/mL).",
+                source: "Lactation and Contraception PDF, Slide 30: 'Endogenous steroid concentrations: hormonal contraceptives vs menopause... Endogenous 17-b-Estradiol... Hormonal contra-ception: 20-80pg/mL (variable) | Post-menopausal: 10-30pg/mL (stable)'"
+            },
+            {
+                section: "Contraceptives and Lactation",
+                fullLO: "LO6: Distinguish between endocrine responses to hormonal contraceptives versus hormonal characteristics of reproductive senescence.",
+                question: "A 22-year-old woman begins taking a progestin-only hormonal contraceptive. Compared to the normal menstrual cycle, the most notable difference in her endogenous reproductive steroid profile while taking this medication will be the complete absence of which of the following normal physiological events?",
+                options: {
+                    A: "Stable baseline progesterone levels",
+                    B: "The mid-cycle LH surge and corresponding estradiol/progesterone peaks",
+                    C: "The production of follicle stimulating hormone (FSH)",
+                    D: "The production of human chorionic gonadotropin (hCG)",
+                    E: "The secretion of prolactin"
+                },
+                correctAnswer: "B",
+                rationale: "The defining feature of hormonal contraceptives on the endogenous steroid profile is the suppression of the mid-cycle LH surge. This flattens the endogenous estradiol and progesterone curves, preventing the high peaks normally seen during ovulation and the luteal phase.",
+                source: "Lactation and Contraception PDF, Slide 29: 'Impact of hormonal contraceptives on endogenous reproductive steroid concentrations [Graphs show normal menstrual cycle with distinct Estradiol and Progesterone peaks, while Combined and Progestin-only hormonal contraceptives show flattened, suppressed endogenous lines]'"
+            },
+
+            // --- Section 3: Pathology of the Breast ---
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO1: Describe the most common breast pathologies along with typical presentations.",
+                question: "A 25-year-old woman presents to the clinic after noticing a mass in her right breast during a self-examination. On physical exam, the physician palpates a 2-cm, well-circumscribed, highly mobile, painless mass. The patient states it does not change in size with her menstrual cycle. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Ductal carcinoma in situ",
+                    B: "Fat necrosis",
+                    C: "Fibroadenoma",
+                    D: "Fibrocystic change",
+                    E: "Intraductal papilloma"
+                },
+                correctAnswer: "C",
+                rationale: "Fibroadenoma is the most common benign breast tumor, classically presenting in younger women (20-35 years of age) as a mobile, painless, sharply circumscribed palpable mass.",
+                source: "Breast Pathology PDF, Slide 12: 'Fibroadenoma • Most common benign breast tumor • mobile, painless, circumscribed palpable masses • in younger women between 20-35 years of age'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO1: Describe the most common breast pathologies along with typical presentations.",
+                question: "A 38-year-old premenopausal woman complains of bilateral breast tenderness and lumpiness that worsens just before her menstrual periods. A biopsy of one of the lumpy areas reveals fibrosis, small cysts, and hyperplastic glands. The pathologist explains that these findings represent a hormonal-induced process rather than overt neoplastic disease. What is the most likely diagnosis?",
+                options: {
+                    A: "Fibroadenoma",
+                    B: "Fibrocystic changes",
+                    C: "Invasive ductal carcinoma",
+                    D: "Mastitis",
+                    E: "Phyllodes tumor"
+                },
+                correctAnswer: "B",
+                rationale: "Fibrocystic changes are hormonally-induced proliferative and cystic changes common in adolescent and premenopausal women. They typically present with bilateral breast tenderness or lumps. Grossly they show white/blue scar tissue with cysts, and microscopically exhibit fibrosis, cysts, and hyperplastic glands.",
+                source: "Breast Pathology PDF, Slide 16: 'Fibrocystic changes • Changes considered more physiologic in nature than overt disease • Hormonal-induced proliferative and cystic change • Adolescent and premenopausal women • Presented with breast tenderness or lump • Symptoms most often bilateral'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO2: Explain causes of gynecomastia.",
+                question: "A 55-year-old man with a long history of chronic alcohol abuse and advanced liver cirrhosis presents with bilateral, tender enlargement of his breasts. The physician explains that his failing liver is unable to properly metabolize certain hormones, leading to an imbalance. Which of the following best describes the underlying hormonal mechanism causing this patient's breast enlargement?",
+                options: {
+                    A: "Decreased estrogen activity compared to androgen activity",
+                    B: "Increased androgen activity compared to prolactin activity",
+                    C: "Increased estrogen activity compared to androgen activity",
+                    D: "Massive secretion of human chorionic gonadotropin",
+                    E: "Primary overproduction of oxytocin"
+                },
+                correctAnswer: "C",
+                rationale: "Gynecomastia is a nonneoplastic enlargement of the male breast. It is fundamentally caused by an increase in the ratio of estrogen to androgen activity. Cirrhosis impairs the liver's ability to metabolize circulating estrogens, leading to this imbalance.",
+                source: "Breast Pathology PDF, Slide 11: 'Gynecomastia • Nonneoplastic enlargement of male breast due to hyperplasia of epithelium and stroma • Due to increased estrogen compared to androgen activity... Other causes include • Cirrhosis'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO2: Explain causes of gynecomastia.",
+                question: "A 22-year-old man presents with unilateral testicular swelling and newly developed, bilateral breast enlargement. Ultrasound reveals a solid mass in the right testicle, which is later identified as a Leydig cell tumor. The patient's gynecomastia is a direct paraneoplastic consequence of the tumor. Which of the following processes is occurring in the male breast tissue as a result of this tumor?",
+                options: {
+                    A: "Accumulation of thick, calcified scar tissue",
+                    B: "Hyperplasia of the epithelium and stroma",
+                    C: "Infiltration by malignant lobular carcinoma cells",
+                    D: "Massive accumulation of mature adipose tissue",
+                    E: "Rapid proliferation of lobular acini into lactating glands"
+                },
+                correctAnswer: "B",
+                rationale: "Gynecomastia is defined histologically as a nonneoplastic enlargement of the male breast resulting from the hyperplasia of both the ductal epithelium and the surrounding stroma. Leydig cell tumors can secrete estrogens or estrogen precursors, triggering this hyperplastic change.",
+                source: "Breast Pathology PDF, Slide 11: 'Gynecomastia • Nonneoplastic enlargement of male breast due to hyperplasia of epithelium and stroma... Other causes include • Testicular tumors (Leydig cell tumor)'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO3: List established risk factors for the development of breast carcinoma.",
+                question: "A 65-year-old woman is diagnosed with invasive ductal carcinoma. The physician takes a detailed reproductive and lifestyle history to assess her risk factors. Which of the following historical findings is a well-established risk factor that increases a woman's lifetime risk of developing breast carcinoma?",
+                options: {
+                    A: "Early age at menopause",
+                    B: "Grand multiparity (history of 6 live births)",
+                    C: "Late age at menarche",
+                    D: "Nulliparity",
+                    E: "Young age at first birth"
+                },
+                correctAnswer: "D",
+                rationale: "Established risk factors for breast cancer relate to total lifetime exposure to estrogen. These include nulliparity (never having given birth), older age at first birth, young age at menarche (early menarche), and older age at menopause.",
+                source: "Breast Pathology PDF, Slide 25: 'Risk factor for breast cancer... Menstrual history • Young age at menarche • Older age at menopause • Pregnancy • Older age at first birth • Nulliparous'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO3: List established risk factors for the development of breast carcinoma.",
+                question: "A 35-year-old woman has a strong family history of early-onset breast and ovarian cancers. Genetic testing reveals a germline mutation in a specific tumor suppressor gene located on chromosome 17. Patients with this specific mutation have a 65% lifetime risk of developing breast carcinoma by age 70. Which of the following genes is mutated in this patient?",
+                options: {
+                    A: "BRCA-1",
+                    B: "BRCA-2",
+                    C: "HER2",
+                    D: "KRAS",
+                    E: "P53"
+                },
+                correctAnswer: "A",
+                rationale: "The BRCA-1 gene is located on chromosome 17 and is a tumor suppressor gene. Germline mutations in BRCA-1 carry a 65% risk of breast carcinoma by age 70, as well as an increased risk of ovarian carcinoma. (BRCA-2 is on chromosome 13).",
+                source: "Breast Pathology PDF, Slide 26: 'Germline mutation associated breast cancer • BRCA-1 gene (chromosome 17) • Tumor suppressor gene • 65% risk of breast carcinoma by age 70 • Increased risk of ovarian carcinoma'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO4: Acquire a basic understanding of different subtypes of breast carcinoma.",
+                question: "A 50-year-old woman undergoes a routine screening mammogram, which reveals clustered microcalcifications in the right breast. A core needle biopsy is performed. The pathologist observes ducts filled with atypical, neoplastic cells, but the cells completely lack cohesion and there is no invasion through the basement membrane. Because of this loss of cellular cohesion, the diagnosis is confirmed as:",
+                options: {
+                    A: "Ductal carcinoma in situ (DCIS)",
+                    B: "Fibroadenoma",
+                    C: "Invasive ductal carcinoma",
+                    D: "Invasive lobular carcinoma",
+                    E: "Lobular carcinoma in situ (LCIS)"
+                },
+                correctAnswer: "E",
+                rationale: "In situ carcinomas do not cross the basement membrane. The key distinguishing feature between DCIS and LCIS is the loss of cellular cohesion. LCIS cells lack E-cadherin, leading to a loss of cohesion, whereas DCIS cells maintain cohesion.",
+                source: "Breast Pathology PDF, Slide 22: 'In Situ carcinoma [Table comparing LCIS and DCIS] Loss of cohesion: LCIS (Yes), DCIS (No)'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO4: Acquire a basic understanding of different subtypes of breast carcinoma.",
+                question: "A 60-year-old woman presents with a firm, irregular mass in the upper outer quadrant of her left breast. A biopsy reveals invasive malignant cells. Under the microscope, the tumor cells lack E-cadherin expression and are seen invading the stroma in a distinct \"single-file\" linear pattern. Which of the following is the most likely diagnosis?",
+                options: {
+                    A: "Ductal carcinoma in situ",
+                    B: "Fibroadenoma",
+                    C: "Invasive ductal carcinoma",
+                    D: "Invasive lobular carcinoma",
+                    E: "Paget disease of the breast"
+                },
+                correctAnswer: "D",
+                rationale: "Invasive lobular carcinoma (which accounts for ~15% of invasive breast cancers) is characterized microscopically by malignant cells invading the stroma in a single-file pattern due to the loss of cellular cohesion (typically from loss of E-cadherin).",
+                source: "Breast Pathology PDF, Slide 30: 'Invasive lobular carcinoma [Slide contains images demonstrating classic single-file linear invasion pattern through the stroma]'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO5: Describe good/bad prognostic indicators associated with breast carcinoma.",
+                question: "A 55-year-old woman undergoes a lumpectomy and sentinel lymph node biopsy for an early-stage invasive breast carcinoma. The pathology report details the tumor's size, grade, hormone receptor status, and the lymph node findings. When discussing the patient's long-term prognosis, the oncologist emphasizes that the single most important prognostic marker in early-stage disease is:",
+                options: {
+                    A: "Axillary lymph node involvement",
+                    B: "The density of the surrounding breast tissue",
+                    C: "The specific age of the patient",
+                    D: "The precise histologic subtype (ductal vs lobular)",
+                    E: "The presence of microcalcifications"
+                },
+                correctAnswer: "A",
+                rationale: "While grading, staging, and receptor status are all important, axillary lymph node involvement is explicitly identified as the most important prognostic marker in early-stage breast cancer.",
+                source: "Breast Pathology PDF, Slide 27: 'Prognostic factors in breast cancer... Axillary lymph node involvement is the most important prognostic marker in early-stage disease'"
+            },
+            {
+                section: "Pathology of the Breast",
+                fullLO: "LO5: Describe good/bad prognostic indicators associated with breast carcinoma.",
+                question: "A 40-year-old African American woman is diagnosed with an aggressive, rapidly growing breast carcinoma. Ancillary testing is performed on the biopsy specimen to guide therapy. The tumor cells demonstrate no expression of estrogen receptors (ER), progesterone receptors (PR), or HER2. This specific \"triple negative\" molecular profile is most strongly associated with which of the following?",
+                options: {
+                    A: "A frequently poor prognosis",
+                    B: "An excellent response to tamoxifen therapy",
+                    C: "An excellent response to trastuzumab therapy",
+                    D: "Exclusively arising in post-menopausal women",
+                    E: "The presence of a benign fibroadenoma"
+                },
+                correctAnswer: "A",
+                rationale: "Triple negative breast cancer (lacking ER, PR, and HER2 expression) is more aggressive, does not respond to hormone therapies (like tamoxifen) or targeted therapies (like trastuzumab), and carries a frequently poor prognosis. It is often seen in younger Black women and those with BRCA mutations.",
+                source: "Breast Pathology PDF, Slide 31: 'Ancillary Testing... Triple negative (i.e., no ER, PR, or HER2 expression) • Frequently poor prognosis • Often seen in young black women, women with BRCA mutation'"
+            },
+
+            // --- Section 4: Physiological Changes of Pregnancy ---
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO1: Discuss the maternal physiologic adaptations during pregnancy in the metabolic, hematologic, endocrine, nervous, cardiovascular, musculoskeletal, respiratory, gastrointestinal, and genitourinary systems",
+                question: "A 36-week pregnant woman presents to the clinic for a routine check-up. She reports feeling dizzy and lightheaded whenever she lies flat on her back on the couch. Her symptoms resolve rapidly when she turns onto her left side. The pathophysiology underlying her symptoms involves the gravid uterus mechanically compressing which of the following structures?",
+                options: {
+                    A: "Abdominal aorta",
+                    B: "Inferior vena cava",
+                    C: "Left renal vein",
+                    D: "Portal vein",
+                    E: "Superior mesenteric artery"
+                },
+                correctAnswer: "B",
+                rationale: "Supine hypotensive syndrome occurs in ~10% of pregnant women when lying supine. The enlarged uterus physically compresses the inferior vena cava (IVC), which drastically reduces venous return and cardiac filling, leading to hypotension and dizziness. Rolling to the lateral decubitus position relieves the compression.",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 22: 'Cardiovascular System... Supine hypotensive syndrome: ~10% of women. Uterus compresses IVC -> ↓ cardiac filling • Lateral decubitus position raises CO ~20% at 26–30 wks'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO1: Discuss the maternal physiologic adaptations during pregnancy in the metabolic, hematologic, endocrine, nervous, cardiovascular, musculoskeletal, respiratory, gastrointestinal, and genitourinary systems",
+                question: "A healthy 30-year-old woman at 32 weeks gestation undergoes an arterial blood gas measurement. The results show a PaCO2 of 30 mmHg and a bicarbonate level of 22 mmol/L. She is breathing comfortably and is in no acute distress. Which of the following physiological changes of pregnancy best explains these findings?",
+                options: {
+                    A: "Elevated levels of oxytocin induce severe metabolic acidosis.",
+                    B: "Progesterone stimulates the respiratory center, causing a compensated respiratory alkalosis.",
+                    C: "The enlarging uterus causes severe compression of the functional residual capacity, causing CO2 retention.",
+                    D: "The placenta rapidly sequesters circulating maternal bicarbonate.",
+                    E: "The physiological anemia of pregnancy forces the tissues to undergo massive anaerobic glycolysis."
+                },
+                correctAnswer: "B",
+                rationale: "During pregnancy, progesterone acts directly on the central respiratory center, raising chemoreflex sensitivity and lowering the PCO2 threshold. This drives increased minute ventilation, leading to a physiological, compensated respiratory alkalosis (PaCO2 drops to ~30 mmHg, and bicarb drops to ~22 mmol/L). A PaCO2 of 40 mmHg in a pregnant patient is actually a sign of abnormal CO2 retention.",
+                source: "Physiologic Changes of Pregnancy PDF, Slides 24 & 25: 'Pulmonary Function... Resulting acid-base state: compensated respiratory alkalosis • PaCO2 ↓ to ~30 mmHg; bicarbonate ↓ from 26 -> 22 mmol/L' and 'Progesterone stimulates the respiratory center — lowers PCO2 threshold; raises chemoreflex sensitivity'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO1: Discuss the maternal physiologic adaptations during pregnancy in the metabolic, hematologic, endocrine, nervous, cardiovascular, musculoskeletal, respiratory, gastrointestinal, and genitourinary systems",
+                question: "A 26-year-old pregnant woman in her third trimester has routine blood work drawn. Her hemoglobin is 11.5 g/dL and her hematocrit is 34% (both slightly decreased from her pre-pregnancy baseline). Her red blood cell indices (MCV, MCH) are completely normal. Which of the following best explains this common hematological finding in a normal pregnancy?",
+                options: {
+                    A: "Autoimmune destruction of maternal red blood cells",
+                    B: "Massive fetal extraction of maternal iron stores",
+                    C: "Plasma volume increases proportionally more than erythrocyte mass",
+                    D: "Suppression of maternal bone marrow erythropoiesis",
+                    E: "The formation of a high-resistance conduit in the spiral arteries"
+                },
+                correctAnswer: "C",
+                rationale: "In a normal pregnancy, the maternal blood volume increases by 40-45%. The erythrocyte mass increases significantly (by ~450 mL), but the plasma volume increases even more. This disproportionate expansion creates a dilutional effect, leading to physiologic dilutional anemia.",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 15: 'Hematological Changes... Plasma volume increases proportionally more than erythrocytemass -> physiologic dilutional anemia'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO2: Discuss the basic aspects of fetal growth and development and placental function",
+                question: "An infant is born prematurely at 24 weeks gestation weighing 550 grams. The neonatologist explains to the parents that while the infant faces significant respiratory and feeding risks, the child has reached a critical historical milestone where survival is possible. At this specific gestational age, the infant's viability is primarily dependent upon which of the following developmental events in the lungs?",
+                options: {
+                    A: "Complete formation of the terminal sacs",
+                    B: "Disappearance of the pupillary membrane",
+                    C: "Massive deposition of subcutaneous fat",
+                    D: "Near completion of canalicular lung development",
+                    E: "Onset of spontaneous fetal breathing movements"
+                },
+                correctAnswer: "D",
+                rationale: "24 weeks is considered the historical threshold of viability (with a weight of ~500g). At this stage, canalicular lung development is nearly complete, and while terminal sacs are not yet fully formed, the fetus may attempt to breathe, making survival outside the womb possible with intensive care.",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 5: 'Fetal Milestones... 24 weeks: historical threshold of viability — weight of 500 g is a more important predictor • Canalicular lung development nearly complete; terminal sacs not yet formed -> may attempt to breathe'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO2: Discuss the basic aspects of fetal growth and development and placental function",
+                question: "A physiologist is studying the transport of various substances across the human placenta during the third trimester. While gases like oxygen and carbon dioxide cross via simple diffusion, the fetus requires active transport for several essential nutrients to achieve concentrations higher than maternal levels. Which of the following substances relies on active transport across the placenta?",
+                options: {
+                    A: "Amino acids",
+                    B: "Carbon dioxide",
+                    C: "Glucose",
+                    D: "Oxygen",
+                    E: "Water"
+                },
+                correctAnswer: "A",
+                rationale: "Amino acids, iron, and calcium are actively transported across the placenta because fetal concentrations need to exceed maternal concentrations. Glucose utilizes facilitated transport, while oxygen and CO2 use simple diffusion.",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 8: 'Placental Gas Exchange & Transport... Amino acids, iron, calcium: active transport — fetal concentrations exceed maternal'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO3: Discuss the basics of parturition and changes of the puerperium period",
+                question: "A 30-year-old woman is admitted to the hospital in active labor (Phase 2 of parturition). She is currently having strong, regular uterine contractions and her cervix is dilated to 8 cm. According to the classical definitions of the stages of active labor, this patient is currently in which of the following stages?",
+                options: {
+                    A: "Phase 0 Prelude",
+                    B: "Phase 1 Preparation",
+                    C: "Phase 2 Active Labor, 1st stage",
+                    D: "Phase 2 Active Labor, 2nd stage",
+                    E: "Phase 2 Active Labor, 3rd stage"
+                },
+                correctAnswer: "C",
+                rationale: "Phase 2 of parturition is Active Labor. It is divided into stages. The 1st stage involves uterine contractions leading to cervical dilation and effacement until the cervix is fully dilated (10 cm). Because this patient is at 8 cm, she is still in the 1st stage of active labor. (The 2nd stage is delivery of the fetus).",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 44: 'Parturition • Phase 2 = Active Labor: • 1st stage: uterine contractions -> cervical dilation/effacement until fully dilated (10 cm)'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO3: Discuss the basics of parturition and changes of the puerperium period",
+                question: "A 28-year-old woman has an uncomplicated vaginal delivery. Fifteen minutes later, the placenta delivers intact. Immediately following the delivery of the placenta (the onset of the puerperium), it is absolutely critical that the myometrium strongly contracts and retracts. The primary purpose of this immediate uterine contraction is to:",
+                options: {
+                    A: "Compress uterine vessels to achieve hemostasis",
+                    B: "Force the residual amniotic fluid out of the vagina",
+                    C: "Induce the rapid onset of lactogenesis",
+                    D: "Promptly reverse the physiological lordosis of pregnancy",
+                    E: "Restore the glomerular filtration rate to pre-pregnancy levels"
+                },
+                correctAnswer: "A",
+                rationale: "Immediately after delivery, the myometrium must contract and retract persistently to physically compress the sheared uterine vessels. This achieves hemostasis. Failure of this process (uterine atony) is the most common cause of postpartum hemorrhage (PPH).",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 48: 'Puerperium • Immediately after delivery: myometrium must contract and retract persistently • Compresses uterine vessels -> hemostasis; most common cause of PPH: uterine atony'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO4: Introduce the basics of prenatal care",
+                question: "A 25-year-old pregnant woman is seeing her obstetrician for a routine prenatal visit. She is currently at 26 weeks gestation. According to the standard prenatal visit timeline, which of the following screening interventions is specifically indicated for this patient at this exact point in her pregnancy?",
+                options: {
+                    A: "Administration of Rh D immunoglobulin",
+                    B: "1-hour glucose challenge test",
+                    C: "Anatomy ultrasound",
+                    D: "First-trimester genetic screening (cell-free DNA)",
+                    E: "Rectovaginal GBS swab"
+                },
+                correctAnswer: "B",
+                rationale: "The 1-hour glucose challenge test (to screen for gestational diabetes) is routinely performed between 24 and 28 weeks of gestation. The anatomy ultrasound is done at 18-22 weeks, RhD immunoglobulin at 28 weeks, and the GBS swab at 36 weeks.",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 54: 'Prenatal Care: Visit Timeline... 24–28 weeks: 1-hour glucose challenge test'"
+            },
+            {
+                section: "Physiological Changes of Pregnancy",
+                fullLO: "LO4: Introduce the basics of prenatal care",
+                question: "A 30-year-old woman presents for her very first prenatal visit at 8 weeks gestation. A comprehensive panel of standard laboratory tests is drawn. Along with blood typing, CBC, and urinalysis, the standard initial prenatal lab panel mandates screening for specific infectious diseases to ensure the health of both the mother and the fetus. Which of the following sets of infectious diseases is standardly tested at this initial visit?",
+                options: {
+                    A: "Cytomegalovirus, Toxoplasmosis, and Parvovirus B19",
+                    B: "Epstein-Barr virus, West Nile Virus, and Zika virus",
+                    C: "Human papillomavirus (HPV), Herpes simplex virus, and Adenovirus",
+                    D: "Rubella, Hepatitis B, Hepatitis C, Syphilis, and HIV",
+                    E: "Tuberculosis, Influenza, and Respiratory Syncytial Virus"
+                },
+                correctAnswer: "D",
+                rationale: "The standard panel of laboratory tests obtained at the first prenatal visit specifically includes screening for Rubella immunity, Hepatitis B antigen, Hepatitis C antibody, Syphilis (RPR/VDRL), HIV, and GC/chlamydia/trichomoniasis.",
+                source: "Physiologic Changes of Pregnancy PDF, Slide 53: 'Prenatal Care: Initial Labs • A standard panel of laboratory tests should be obtained at the first prenatal visit: ... Rubella immunity; Hepatitis B antigen; Hepatitis C antibody • Syphilis (RPR/VDRL); HIV; GC, chlamydia, trichomoniasis'"
+            }
+        ];
+
+        // --- Core Logic ---
+        const quizRoot = document.getElementById('quiz-root');
+        const themeSelect = document.getElementById('theme-select');
+        const pinBtn = document.getElementById('pin-btn');
+        const mainHeader = document.getElementById('main-header');
+        const sectionNav = document.getElementById('section-nav');
+        const customBuilder = document.getElementById('custom-builder');
+        const rootElements = document.documentElement;
+
+        let isRevealed = false;
+
+        function toggleAllLOs() {
+            isRevealed = !isRevealed;
+            const btn = document.getElementById('reveal-all-btn');
+            btn.textContent = isRevealed ? "Hide Learning Objectives" : "Show Learning Objectives";
+            
+            document.querySelectorAll('.lo-box').forEach(box => {
+                box.style.display = isRevealed ? 'block' : 'none';
+            });
+        }
+
+        function initQuiz() {
+            let currentSection = "";
+            let sectionIndex = 0;
+            
+            quizData.forEach((item, index) => {
+                if (item.section !== currentSection) {
+                    currentSection = item.section;
+                    
+                    const sectionId = 'sec-' + sectionIndex;
+                    
+                    const sectionHeader = document.createElement('h2');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.id = sectionId;
+                    sectionHeader.textContent = currentSection;
+                    quizRoot.appendChild(sectionHeader);
+
+                    const navBtn = document.createElement('button');
+                    let btnText = currentSection;
+                    if (btnText.includes("Uterine Drugs & Drugs in Pregnancy")) btnText = "Uterine Drugs";
+                    if (btnText.includes("Contraceptives and Lactation")) btnText = "Contraceptives & Lactation";
+                    if (btnText.includes("Pathology of the Breast")) btnText = "Breast Pathology";
+                    if (btnText.includes("Physiological Changes of Pregnancy")) btnText = "Pregnancy Physiology";
+                    
+                    navBtn.textContent = btnText;
+                    navBtn.onclick = () => {
+                        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+                    };
+                    sectionNav.appendChild(navBtn);
+
+                    sectionIndex++;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                const loBox = document.createElement('div');
+                loBox.className = 'lo-box';
+                loBox.id = `lo-${index}`;
+                loBox.innerHTML = item.fullLO;
+                card.appendChild(loBox);
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerHTML = `${index + 1}. ${item.question}`;
+                card.appendChild(qText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                for (const[key, value] of Object.entries(item.options)) {
+                    const label = document.createElement('label');
+                    label.className = 'option-label';
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question-${index}`;
+                    input.value = key;
+
+                    const span = document.createElement('span');
+                    span.innerHTML = `${key}. ${value}`;
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    optionsGrid.appendChild(label);
+                }
+                card.appendChild(optionsGrid);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-check';
+                btn.textContent = 'Check Answer';
+                btn.onclick = () => checkAnswer(index);
+                card.appendChild(btn);
+
+                const feedback = document.createElement('div');
+                feedback.className = 'feedback';
+                feedback.id = `feedback-${index}`;
+                card.appendChild(feedback);
+
+                quizRoot.appendChild(card);
+            });
+
+            const returnContainer = document.createElement('div');
+            returnContainer.style.textAlign = 'center';
+            returnContainer.style.marginTop = '2rem';
+            
+            const returnBtn = document.createElement('a');
+            returnBtn.href = 'https://ibecerramcg.github.io/GI-GU-ENDO-Practice-Quizzes/';
+            returnBtn.className = 'btn-link';
+            returnBtn.textContent = '← Return to Quiz Directory';
+            
+            returnContainer.appendChild(returnBtn);
+            quizRoot.appendChild(returnContainer);
+
+            const savedTheme = localStorage.getItem('quizTheme') || 'dark';
+            themeSelect.value = savedTheme;
+            changeTheme(savedTheme);
+
+            const savedPinState = localStorage.getItem('headerPinned');
+            toggleHeader(savedPinState !== 'false');
+        }
+
+        function checkAnswer(index) {
+            const selected = document.querySelector(`input[name="question-${index}"]:checked`);
+            const feedbackEl = document.getElementById(`feedback-${index}`);
+            const data = quizData[index];
+
+            if (!selected) {
+                alert("Please select an answer.");
+                return;
+            }
+
+            const isCorrect = selected.value === data.correctAnswer;
+            
+            let html = `<span class="feedback-header">${isCorrect ? "Correct!" : "Incorrect"}</span>`;
+            if (!isCorrect) {
+                html += `<div>The correct answer is <strong>${data.correctAnswer}</strong>.</div>`;
+            }
+            
+            html += `<div class="rationale"><strong>Rationale:</strong> ${data.rationale}</div>`;
+            html += `<div class="source"><strong>Source:</strong> ${data.source}</div>`;
+
+            feedbackEl.innerHTML = html;
+            feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedbackEl.style.display = 'block';
+        }
+
+        function changeTheme(themeName) {
+            localStorage.setItem('quizTheme', themeName);
+            
+            if (themeName === 'custom') {
+                rootElements.removeAttribute('data-theme');
+                customBuilder.classList.add('active');
+                loadCustomTheme();
+            } else {
+                rootElements.setAttribute('data-theme', themeName);
+                customBuilder.classList.remove('active');
+                rootElements.removeAttribute('style');
+            }
+        }
+
+        function updateCustomTheme() {
+            const bg = document.getElementById('color-bg').value;
+            const card = document.getElementById('color-card').value;
+            const text = document.getElementById('color-text').value;
+            const accent = document.getElementById('color-accent').value;
+
+            rootElements.style.setProperty('--bg-body', bg);
+            rootElements.style.setProperty('--bg-header', bg);
+            rootElements.style.setProperty('--bg-card', card);
+            rootElements.style.setProperty('--highlight-bg', card);
+            rootElements.style.setProperty('--text-main', text);
+            rootElements.style.setProperty('--text-accent', accent);
+            rootElements.style.setProperty('--button-bg', accent);
+            rootElements.style.setProperty('--button-text', bg);
+            rootElements.style.setProperty('--border-color', accent + '40');
+
+            const customColors = { bg, card, text, accent };
+            localStorage.setItem('customThemeColors', JSON.stringify(customColors));
+        }
+
+        function loadCustomTheme() {
+            const savedColors = JSON.parse(localStorage.getItem('customThemeColors'));
+            if (savedColors) {
+                document.getElementById('color-bg').value = savedColors.bg;
+                document.getElementById('color-card').value = savedColors.card;
+                document.getElementById('color-text').value = savedColors.text;
+                document.getElementById('color-accent').value = savedColors.accent;
+                updateCustomTheme();
+            } else {
+                updateCustomTheme();
+            }
+        }
+
+        function toggleHeader(forceState) {
+            const isCurrentlyPinned = !mainHeader.classList.contains('unpinned');
+            const newState = (typeof forceState === 'boolean') ? forceState : !isCurrentlyPinned;
+
+            if (newState) {
+                mainHeader.classList.remove('unpinned');
+                pinBtn.classList.add('pin-active');
+                localStorage.setItem('headerPinned', 'true');
+            } else {
+                mainHeader.classList.add('unpinned');
+                pinBtn.classList.remove('pin-active');
+                localStorage.setItem('headerPinned', 'false');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+
+    </script>
+</body>
+</html>
